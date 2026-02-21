@@ -568,8 +568,27 @@
       background: var(--ivory);
     }
 
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group select:focus {
       border-color: var(--accent);
+    }
+
+    .form-group select {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color 0.2s;
+      background: var(--ivory);
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A8A29E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
     }
 
     .form-hint {
@@ -802,16 +821,42 @@
       <form action="https://formspree.io/f/xnjbgpwd" method="POST">
         <div class="form-group">
           <label for="birthdate">Date of Birth</label>
-          <input type="date" id="birthdate" name="생년월일" required>
+          <input type="text" id="birthdate" name="생년월일" placeholder="YYYYMMDD (e.g. 19900315)" maxlength="8" pattern="\d{8}" required>
+          <span class="form-hint">Enter 8 digits — year, month, day</span>
         </div>
         <div class="form-group">
           <label for="birthtime">Time of Birth</label>
-          <input type="time" id="birthtime" name="태어난시간">
-          <span class="form-hint">Leave blank if unknown — we'll still provide a reading.</span>
-        </div>
-        <div class="form-group">
-          <label for="birthregion">Place of Birth</label>
-          <input type="text" id="birthregion" name="태어난지역" placeholder="e.g. Seoul, Busan, New York..." required>
+          <select id="birthtime" name="태어난시간">
+            <option value="">Unknown / Not sure</option>
+            <optgroup label="오전 AM">
+              <option value="00:00">자정 Midnight (00:00)</option>
+              <option value="01:00">오전 1시 (01:00)</option>
+              <option value="02:00">오전 2시 (02:00)</option>
+              <option value="03:00">오전 3시 (03:00)</option>
+              <option value="04:00">오전 4시 (04:00)</option>
+              <option value="05:00">오전 5시 (05:00)</option>
+              <option value="06:00">오전 6시 (06:00)</option>
+              <option value="07:00">오전 7시 (07:00)</option>
+              <option value="08:00">오전 8시 (08:00)</option>
+              <option value="09:00">오전 9시 (09:00)</option>
+              <option value="10:00">오전 10시 (10:00)</option>
+              <option value="11:00">오전 11시 (11:00)</option>
+            </optgroup>
+            <optgroup label="오후 PM">
+              <option value="12:00">정오 Noon (12:00)</option>
+              <option value="13:00">오후 1시 (13:00)</option>
+              <option value="14:00">오후 2시 (14:00)</option>
+              <option value="15:00">오후 3시 (15:00)</option>
+              <option value="16:00">오후 4시 (16:00)</option>
+              <option value="17:00">오후 5시 (17:00)</option>
+              <option value="18:00">오후 6시 (18:00)</option>
+              <option value="19:00">오후 7시 (19:00)</option>
+              <option value="20:00">오후 8시 (20:00)</option>
+              <option value="21:00">오후 9시 (21:00)</option>
+              <option value="22:00">오후 10시 (22:00)</option>
+              <option value="23:00">오후 11시 (23:00)</option>
+            </optgroup>
+          </select>
         </div>
         <button type="submit" class="form-submit">Submit →</button>
       </form>
