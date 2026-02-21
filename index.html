@@ -1,36 +1,834 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>사주 정보 입력</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Saju — Korean Destiny Reading</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ivory: #FAF8F4;
+      --ivory-dark: #F2EDE6;
+      --charcoal: #1C1917;
+      --charcoal-soft: #44403C;
+      --muted: #A8A29E;
+      --muted-light: #D6D0C8;
+      --accent: #C96442;
+      --accent-light: #E8907A;
+      --border: #E5DED5;
+      --white: #FFFFFF;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ivory);
+      color: var(--charcoal);
+      font-family: 'DM Sans', -apple-system, sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(250, 248, 244, 0.88);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+    }
+
+    .logo-en {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.25rem;
+      color: var(--charcoal);
+      letter-spacing: -0.01em;
+    }
+
+    .logo-kr {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    nav ul a {
+      text-decoration: none;
+      color: var(--charcoal-soft);
+      font-size: 0.88rem;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--charcoal); }
+
+    .nav-cta {
+      background: var(--charcoal) !important;
+      color: var(--ivory) !important;
+      padding: 0.55rem 1.2rem;
+      border-radius: 6px;
+      font-size: 0.85rem !important;
+      transition: background 0.2s !important;
+    }
+
+    .nav-cta:hover { background: var(--charcoal-soft) !important; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 10rem 2rem 6rem;
+      position: relative;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 100%;
+      background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(201,100,66,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      padding: 0.4rem 1rem;
+      font-size: 0.8rem;
+      color: var(--charcoal-soft);
+      margin-bottom: 2.5rem;
+      background: var(--white);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 400;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--charcoal);
+      max-width: 700px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.35s forwards;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-kr {
+      font-family: 'Noto Serif KR', serif;
+      font-size: clamp(1rem, 2.5vw, 1.4rem);
+      color: var(--muted);
+      font-weight: 300;
+      margin-top: 0.5rem;
+      letter-spacing: 0.15em;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.45s forwards;
+    }
+
+    .hero-desc {
+      max-width: 440px;
+      font-size: 1.05rem;
+      color: var(--charcoal-soft);
+      margin: 2rem auto 0;
+      line-height: 1.75;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.55s forwards;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 2.5rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.65s forwards;
+    }
+
+    .btn-dark {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--charcoal);
+      color: var(--ivory);
+      padding: 0.8rem 1.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 400;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-dark:hover {
+      background: var(--charcoal-soft);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--border);
+      color: var(--charcoal-soft);
+      padding: 0.8rem 1.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 400;
+      text-decoration: none;
+      background: var(--white);
+      transition: border-color 0.2s, transform 0.15s;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--muted);
+      transform: translateY(-1px);
+    }
+
+    .hero-note {
+      margin-top: 1.2rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+      opacity: 0;
+      animation: fadeUp 0.8s 0.75s forwards;
+    }
+
+    /* SECTION WRAPPER */
+    .section {
+      padding: 7rem 2rem;
+    }
+
+    .section-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      color: var(--charcoal);
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      font-size: 1rem;
+      color: var(--charcoal-soft);
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+    /* DIVIDER */
+    .divider {
+      height: 1px;
+      background: var(--border);
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    /* FOUR PILLARS */
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      margin-top: 3.5rem;
+    }
+
+    .pillar {
+      background: var(--white);
+      padding: 2.5rem;
+      transition: background 0.2s;
+    }
+
+    .pillar:hover { background: var(--ivory); }
+
+    .pillar-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .pillar-char {
+      font-family: 'Noto Serif KR', serif;
+      font-size: 2rem;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .pillar-title-wrap h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--charcoal);
+    }
+
+    .pillar-title-wrap span {
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+    }
+
+    .pillar p {
+      font-size: 0.9rem;
+      color: var(--charcoal-soft);
+      line-height: 1.65;
+    }
+
+    /* HOW IT WORKS */
+    .steps {
+      margin-top: 3.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 1.5rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .step-num {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      flex-shrink: 0;
+      margin-top: 2px;
+      background: var(--white);
+    }
+
+    .step h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--charcoal);
+      margin-bottom: 0.4rem;
+    }
+
+    .step p {
+      font-size: 0.92rem;
+      color: var(--charcoal-soft);
+      line-height: 1.65;
+    }
+
+    /* PRICING */
+    .pricing-wrap {
+      margin-top: 3.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .pricing-info h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .pricing-info p {
+      color: var(--charcoal-soft);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      max-width: 360px;
+    }
+
+    .price-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.04);
+    }
+
+    .price-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .price-amount {
+      font-family: 'DM Serif Display', serif;
+      font-size: 3.5rem;
+      line-height: 1;
+      color: var(--charcoal);
+    }
+
+    .price-amount sup {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1.2rem;
+      color: var(--charcoal-soft);
+      vertical-align: super;
+      font-weight: 300;
+    }
+
+    .price-tag {
+      background: rgba(201,100,66,0.1);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.3rem 0.7rem;
+      border-radius: 100px;
+    }
+
+    .price-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .price-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      font-size: 0.88rem;
+      color: var(--charcoal-soft);
+    }
+
+    .check {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: rgba(201,100,66,0.12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: var(--accent);
+      font-size: 0.6rem;
+    }
+
+    .price-cta {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: var(--charcoal);
+      color: var(--ivory);
+      padding: 0.85rem;
+      border-radius: 8px;
+      border: none;
+      font-size: 0.9rem;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .price-cta:hover { background: var(--charcoal-soft); }
+
+    /* FORM MODAL */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(28,25,23,0.5);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.4rem;
+    }
+
+    .modal h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--charcoal);
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.3rem;
+      color: var(--muted);
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .modal-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-bottom: 1.8rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group label {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--charcoal-soft);
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input {
+      padding: 0.75rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--charcoal);
+      outline: none;
+      transition: border-color 0.2s;
+      background: var(--ivory);
+    }
+
+    .form-group input:focus {
+      border-color: var(--accent);
+    }
+
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.3rem;
+    }
+
+    .form-submit {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--charcoal);
+      color: var(--ivory);
+      border: none;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+
+    .form-submit:hover { background: var(--charcoal-soft); }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2.5rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      nav ul { display: none; }
+      .pillars-grid { grid-template-columns: 1fr; }
+      .pricing-wrap { grid-template-columns: 1fr; gap: 2rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>사주 정보 입력</h1>
-        <p class="subtitle">생년월일, 태어난 시간, 지역을 입력해주세요</p>
 
-        <form action="https://formspree.io/f/xnjbgpwd" method="POST">
-            <div class="form-group">
-                <label for="birthdate">생년월일</label>
-                <input type="date" id="birthdate" name="생년월일" required>
-            </div>
-
-            <div class="form-group">
-                <label for="birthtime">태어난 시간</label>
-                <input type="time" id="birthtime" name="태어난시간">
-                <span class="hint">모르시면 비워두셔도 됩니다</span>
-            </div>
-
-            <div class="form-group">
-                <label for="birthregion">태어난 지역</label>
-                <input type="text" id="birthregion" name="태어난지역" placeholder="예: 서울, 부산, 대구..." required>
-            </div>
-
-            <button type="submit">제출하기</button>
-        </form>
+  <nav>
+    <div class="logo">
+      <span class="logo-en">Saju</span>
+      <span class="logo-kr">사주</span>
     </div>
-    <script src="main.js"></script>
+    <ul>
+      <li><a href="#pillars">The Four Pillars</a></li>
+      <li><a href="#how">How It Works</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+      <li><a href="#pricing" class="nav-cta">Get Reading — $1</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      1,000 years of Korean tradition
+    </div>
+    <h1>Your destiny,<br>written at <em>birth</em></h1>
+    <p class="hero-kr">사주 · 四柱</p>
+    <p class="hero-desc">
+      Discover what the moment of your birth reveals about your personality, relationships, career, and the forces shaping your life right now.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-dark" onclick="document.getElementById('modal').classList.add('open')">Get My Reading — $1</button>
+      <a href="#pillars" class="btn-outline">Learn about Saju</a>
+    </div>
+    <p class="hero-note">No subscription · Instant delivery · Ancient Korean wisdom</p>
+  </section>
+
+  <!-- FOUR PILLARS -->
+  <section class="section" id="pillars" style="background: var(--white);">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-label">The System</p>
+        <h2 class="section-title">Four Pillars of Destiny</h2>
+        <p class="section-sub">Your birth encodes four cosmic coordinates — year, month, day, and hour — each revealing a different dimension of who you are.</p>
+      </div>
+      <div class="pillars-grid reveal">
+        <div class="pillar">
+          <div class="pillar-header">
+            <span class="pillar-char">年</span>
+            <div class="pillar-title-wrap">
+              <h3>Year Pillar</h3>
+              <span>년주 · Ancestry & Social Fate</span>
+            </div>
+          </div>
+          <p>How the outer world perceives you. Your roots, ancestral energies, and the social destiny you were born into.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-header">
+            <span class="pillar-char">月</span>
+            <div class="pillar-title-wrap">
+              <h3>Month Pillar</h3>
+              <span>월주 · Career & Environment</span>
+            </div>
+          </div>
+          <p>The environment you thrive in. Your work ethic, family dynamics, and the conditions that unlock your potential.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-header">
+            <span class="pillar-char">日</span>
+            <div class="pillar-title-wrap">
+              <h3>Day Pillar</h3>
+              <span>일주 · Core Self & Relationships</span>
+            </div>
+          </div>
+          <p>The heart of who you are. Your true character, how you love, and what you seek in intimate relationships.</p>
+        </div>
+        <div class="pillar">
+          <div class="pillar-header">
+            <span class="pillar-char">時</span>
+            <div class="pillar-title-wrap">
+              <h3>Hour Pillar</h3>
+              <span>시주 · Ambition & Legacy</span>
+            </div>
+          </div>
+          <p>What you leave behind. Your deepest ambitions, relationship with children, and the mark you make on the world.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="section" id="how">
+    <div class="section-inner">
+      <div class="reveal">
+        <p class="section-label">The Process</p>
+        <h2 class="section-title">Simple. Instant. Revealing.</h2>
+      </div>
+      <div class="steps">
+        <div class="step reveal">
+          <div class="step-num">1</div>
+          <div>
+            <h3>Enter your birth details</h3>
+            <p>Provide your date of birth, time, and place. Even an approximate birth time provides meaningful insight into your chart.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">2</div>
+          <div>
+            <h3>Your Saju chart is calculated</h3>
+            <p>Using the traditional heavenly stems (천간) and earthly branches (지지) system — unchanged for over a millennium — your unique Four Pillars chart is constructed.</p>
+          </div>
+        </div>
+        <div class="step reveal">
+          <div class="step-num">3</div>
+          <div>
+            <h3>Receive your personalized reading</h3>
+            <p>Get a clear, plain-English interpretation of your chart covering personality, career, relationships, and what the current luck cycle means for your year ahead.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing">
+    <div class="section-inner">
+      <div class="pricing-wrap">
+        <div class="pricing-info reveal">
+          <p class="section-label">Pricing</p>
+          <h2>One reading.<br>One dollar.</h2>
+          <p>No subscription. No upsells. Just a complete, personalized Saju reading — delivered instantly for $1.</p>
+        </div>
+        <div class="price-card reveal">
+          <div class="price-top">
+            <div class="price-amount"><sup>$</sup>1</div>
+            <span class="price-tag">Full Reading</span>
+          </div>
+          <ul class="price-features">
+            <li><span class="check">✓</span> Complete Four Pillars chart</li>
+            <li><span class="check">✓</span> Personality & innate strengths</li>
+            <li><span class="check">✓</span> Career & wealth tendencies</li>
+            <li><span class="check">✓</span> Love & relationship energies</li>
+            <li><span class="check">✓</span> 2025–2026 luck cycle forecast</li>
+          </ul>
+          <button class="price-cta" onclick="document.getElementById('modal').classList.add('open')">Begin My Reading →</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="logo">
+      <span class="logo-en">Saju</span>
+      <span class="logo-kr">사주</span>
+    </div>
+    <p class="footer-copy">© 2025 Saju · Korean Destiny Readings for the World</p>
+  </footer>
+
+  <!-- FORM MODAL -->
+  <div class="modal-overlay" id="modal" onclick="if(event.target===this)this.classList.remove('open')">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Begin My Reading</h2>
+        <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')">✕</button>
+      </div>
+      <p class="modal-sub">Enter your birth details to receive your personalized Saju reading.</p>
+      <form action="https://formspree.io/f/xnjbgpwd" method="POST">
+        <div class="form-group">
+          <label for="birthdate">Date of Birth</label>
+          <input type="date" id="birthdate" name="생년월일" required>
+        </div>
+        <div class="form-group">
+          <label for="birthtime">Time of Birth</label>
+          <input type="time" id="birthtime" name="태어난시간">
+          <span class="form-hint">Leave blank if unknown — we'll still provide a reading.</span>
+        </div>
+        <div class="form-group">
+          <label for="birthregion">Place of Birth</label>
+          <input type="text" id="birthregion" name="태어난지역" placeholder="e.g. Seoul, Busan, New York..." required>
+        </div>
+        <button type="submit" class="form-submit">Submit →</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 100);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
 </body>
 </html>
