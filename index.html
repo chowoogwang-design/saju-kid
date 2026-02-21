@@ -1,14 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>사주 정보 입력</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>Hello, world!</h1>
-    <button id="hello-btn">Click me!</button>
+    <div class="container">
+        <h1>사주 정보 입력</h1>
+        <p class="subtitle">생년월일, 태어난 시간, 지역을 입력해주세요</p>
+
+        <form action="https://formspree.io/f/xnjbgpwd" method="POST">
+            <div class="form-group">
+                <label for="birthdate">생년월일</label>
+                <input type="date" id="birthdate" name="생년월일" required>
+            </div>
+
+            <div class="form-group">
+                <label for="birthtime">태어난 시간</label>
+                <input type="time" id="birthtime" name="태어난시간">
+                <span class="hint">모르시면 비워두셔도 됩니다</span>
+            </div>
+
+            <div class="form-group">
+                <label for="birthregion">태어난 지역</label>
+                <input type="text" id="birthregion" name="태어난지역" placeholder="예: 서울, 부산, 대구..." required>
+            </div>
+
+            <button type="submit">제출하기</button>
+        </form>
+    </div>
     <script src="main.js"></script>
 </body>
 </html>
